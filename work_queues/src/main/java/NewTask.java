@@ -27,6 +27,7 @@ public class NewTask {
         boolean durable = true; //queue will be not lost, if rabbitmq server stops, saved on file disk
         channel.queueDeclare("task_queue", durable, false, false, null);
         String message = getMessage(args);
+        //first argument is empty string as it marks default exchange
         channel.basicPublish("", "task_queue", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
