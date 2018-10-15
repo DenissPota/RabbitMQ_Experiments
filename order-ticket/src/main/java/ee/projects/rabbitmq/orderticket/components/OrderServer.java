@@ -15,19 +15,13 @@ public class OrderServer {
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(" [x] Received request for " + orderMessageAsJson);
 
-
         OrderMessage orderMessage = mapper.readValue(orderMessageAsJson, OrderMessage.class);
 
-        if(orderMessage.getStatus().equals(Status.SENT.toString())){
+        if (orderMessage.getStatus().equals(Status.SENT.toString())) {
             orderMessage.setStatus(Status.SUCCESSFUL.toString());
         }
         System.out.println(" [.] Returned " + orderMessage.getUuid() + " " + orderMessage.getStatus());
         return mapper.writeValueAsString(orderMessage);
-    }
-
-    private OrderMessage processMessage(OrderMessage orderMessage) {
-        System.out.println(orderMessage);
-        return orderMessage;
     }
 
 

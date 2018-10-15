@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 
 @AllArgsConstructor @NoArgsConstructor
 public class OrderMessage {
@@ -21,7 +20,4 @@ public class OrderMessage {
 
     @Getter @Setter
     private String status;
-
-    @Getter @Setter
-    private Date date;
 }
