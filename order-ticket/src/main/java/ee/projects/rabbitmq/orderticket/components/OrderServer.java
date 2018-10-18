@@ -11,6 +11,7 @@ public class OrderServer {
 
 
     @RabbitListener(queues = "order-queue")
+    //@RabbitListener(queues = "amq.rabbitmq.reply-to")
     public String processOrder(String orderMessageAsJson) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(" [x] Received request for " + orderMessageAsJson);

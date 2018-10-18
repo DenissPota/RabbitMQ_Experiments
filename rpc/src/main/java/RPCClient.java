@@ -32,28 +32,32 @@ public class RPCClient {
 
         //Create a dedicated exclusive queue for the reply and subscribe to it.
         String replyQueueName = channel.queueDeclare().getQueue();
+        String replyToQueue = "amq.rabbitmq.reply-to";
         AMQP.BasicProperties props = new AMQP.BasicProperties
                 .Builder()
                 .correlationId(corrId)
-                .replyTo(replyQueueName)
+                .replyTo(replyToQueue)
                 .build();
 
-        channel.basicPublish("", QUEUE_NAME, props, message.getBytes("UTF-8"));
 
         /*As we need to suspend main while server is working, we use BlockingQueue with capacity 1
         which means that we need to wait only for 1 response*/
         final BlockingQueue<String> response = new ArrayBlockingQueue<>(1);
 
-        String ctag = channel.basicConsume(replyQueueName, true, new DefaultConsumer(channel) {
+        //For reply-to, use replyToQueue and autoack true. Also consume should be before publish.
+        String ctag = channel.basicConsume(replyToQueue, true, new DefaultConsumer(channel) {
             /*Handle delivery check whether arrived message has same as we put it in.
             if it is, it is put to BlockingQueue*/
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                if (properties.getCorrelationId().equals(corrId)) {
+                //if (properties.getCorrelationId().equals(corrId)) {
                     response.offer(new String(body, "UTF-8"));
-                }
+                //}
             }
         });
+
+        channel.basicPublish("", QUEUE_NAME, props, message.getBytes("UTF-8"));
+
 
         String result = response.take();
         channel.basicCancel(ctag);

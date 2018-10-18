@@ -23,7 +23,9 @@ public class OrderClient {
 
     private List<String> routingKeys =
             Arrays.asList("order.ticket.concert.tallinn",
+                    "order.mass-ticket.concert.minsk",
                     "order.ticket.concert.tartu",
+                    "order.ticket.concert.voru",
                     "booking.ticket.concert.tallinn,",
                     "announce.ticket.concert.valga");
 
@@ -45,6 +47,7 @@ public class OrderClient {
             String orderMessage = objectToJSON(setupMessage());
             String routingKey = getRandom(routingKeys);
             System.out.println("Sent " + orderMessage + " | with routing key: " + routingKey);
+            //String response = (String) template.convertSendAndReceive(topicExchange.getName(), routingKey, orderMessage);
             String response = (String) template.convertSendAndReceive(topicExchange.getName(), routingKey, orderMessage);
             System.out.println("Got back from server: '" + response + "'");
         } catch (JsonProcessingException e) {

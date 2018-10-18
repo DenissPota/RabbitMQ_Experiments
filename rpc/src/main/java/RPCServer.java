@@ -61,6 +61,7 @@ public class RPCServer {
                 }
             }
         };
+        boolean autoAck = true;
         channel.basicConsume(QUEUE_NAME, false, consumer);
     }
 }
